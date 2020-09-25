@@ -1,38 +1,62 @@
 <head>
   <title>Narrative Action Economy</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue"></script>
 </head>
 
-<script src="https://cdn.jsdelivr.net/npm/vue"></script>
-
 <div id="app">
-  <label for="playerName">
-    To add a player, insert it's name on the text box bellow:
-  </label>
-  <br>
+  <form ref="form" @submit.prevent="addPlayer">
+    <p>To add a player, fill the form bellow:</p>
 
-  <input
-    id="playerName"
-    v-model="playerName"
-    type="text"
-    @keydown.enter="addPlayer"
-  />
+    <label for="playerName">
+      Player Name:
+    </label>
+    <input
+      id="playerName"
+      name="player"
+      type="text"
+      required
+      class="NarrativeActionEconomy__input"
+    />
+    
+    <label for="characterName">
+      Character Name:
+    </label>
+    <input
+      id="characterName"
+      name="name"
+      type="text"
+      required
+      class="NarrativeActionEconomy__input"
+    />
+
+    <button type="submit">submit</button>
+  </form>
 
   <template v-if="listSorted.length">
     <hr>
 
     <strong>Players bellow:</strong>
 
-    <ol>
-      <li
+    <table class="NarrativeActionEconomy__table">
+      <tr>
+        <th>Player</th>
+        <th>Character</th>
+        <th>Actions</th>
+      </tr>
+
+      <tr
         v-for="item in listSorted"
         :key="item.id"
+        class="NarrativeActionEconomy__table-row"
       >
-        <button type="button" @click="onRemove(item)">remove</button>
-        <button type="button" @click="onAction(item)">took action</button>
-        
-        {{ item.name }}
-      </li>
-    </ol>
+        <td>{{ item.player }}</td>
+        <td>{{ item.name }}</td>v
+        <td>
+          <button type="button" @click="onAction(item)">took action</button>
+          <button type="button" @click="onRemove(item)">remove</button>
+        </td>
+      </tr>
+    </table>
   </template>
 </div>
 
@@ -43,7 +67,6 @@ window.vm = new Vue({
   el: '#app',
   data: () => ({
     id: 0,
-    playerName: '',
     list: JSON.parse(window.localStorage.getItem(`${namespace}:list`)) || [],
   }),
   computed: {
@@ -67,15 +90,36 @@ window.vm = new Vue({
     onAction(item) {
       item.updatedAt = new Date();
     },
-    addPlayer() {
+    addPlayer($event) {
+      const values = Object.fromEntries(
+        Array.from($event.target)
+          .filter(i => Boolean(i.name))
+          .map(i => [i.name, i.value])
+      )
+
       this.list.push({
+        ...values,
         id: this.id++,
-        name: this.playerName,
         updatedAt: new Date(),
       })
 
-      this.playerName = ''
+      this.$refs.form.reset();
     },
   },
 });
 </script>
+
+<style>
+  .NarrativeActionEconomy__input {
+    width: 100%;
+  }
+
+  .NarrativeActionEconomy__table {
+    width: 100%;
+    text-align: center;
+  }
+
+  .NarrativeActionEconomy__table-row:nth-child(even) {
+    background-color: hsl(0deg, 0%, 90%);
+  }
+</style>

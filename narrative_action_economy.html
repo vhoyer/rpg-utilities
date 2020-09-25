@@ -27,6 +27,7 @@
         v-for="item in listSorted"
         :key="item.name"
       >
+        <button type="button" @click="onRemove(item)">remove</button>
         <button type="button" @click="onAction(item)">took action</button>
         
         {{ item.name }}
@@ -48,6 +49,15 @@ window.vm = new Vue({
   },
  },
  methods: {
+   onRemove(item) {
+     const isEqual = (a, b) => [
+       'name',
+       'updatedAt',
+     ].every(key => a[key] === b[key])
+
+     const indexToRemove = this.list.findIndex(i => isEqual(i, item))
+     this.list.splice(indexToRemove, 1)
+   },
    onAction(item) {
      item.updatedAt = new Date();
    },

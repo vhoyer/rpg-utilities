@@ -25,7 +25,7 @@
     <ol>
       <li
         v-for="item in listSorted"
-        :key="item.name"
+        :key="item.id"
       >
         <button type="button" @click="onRemove(item)">remove</button>
         <button type="button" @click="onAction(item)">took action</button>
@@ -42,6 +42,7 @@ const namespace = 'NarrativeActionEconomy';
 window.vm = new Vue({
   el: '#app',
   data: () => ({
+    id: 0,
     playerName: '',
     list: JSON.parse(window.localStorage.getItem(`${namespace}:list`)) || [],
   }),
@@ -60,19 +61,19 @@ window.vm = new Vue({
   },
   methods: {
     onRemove(item) {
-      const isEqual = (a, b) => [
-        'name',
-        'updatedAt',
-      ].every(key => a[key] === b[key])
-
-      const indexToRemove = this.list.findIndex(i => isEqual(i, item))
+      const indexToRemove = this.list.findIndex(i => item.id === i.id)
       this.list.splice(indexToRemove, 1)
     },
     onAction(item) {
       item.updatedAt = new Date();
     },
     addPlayer() {
-      this.list.push({ name: this.playerName, updatedAt: new Date() })
+      this.list.push({
+        id: this.id++,
+        name: this.playerName,
+        updatedAt: new Date(),
+      })
+
       this.playerName = ''
     },
   },

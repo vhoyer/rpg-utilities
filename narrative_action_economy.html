@@ -37,15 +37,25 @@
 </div>
 
 <script>
+const namespace = 'NarrativeActionEconomy';
+
 window.vm = new Vue({
   el: '#app',
   data: () => ({
     playerName: '',
-    list: [],
+    list: JSON.parse(window.localStorage.getItem(`${namespace}:list`)) || [],
   }),
   computed: {
     listSorted() {
       return this.list.sort((a, b) => a.updatedAt - b.updatedAt);
+    },
+  },
+  watch: {
+    list: {    
+      immediate: true,
+      handler(list) {
+        window.localStorage.setItem(`${namespace}:list`, JSON.stringify(list))
+      },
     },
   },
   methods: {

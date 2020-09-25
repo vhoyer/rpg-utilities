@@ -38,33 +38,33 @@
 
 <script>
 window.vm = new Vue({
- el: '#app',
- data: () => ({
-  playerName: '',
-   list: [],
- }),
- computed: {
-  listSorted() {
-    return this.list.sort((a, b) => a.updatedAt - b.updatedAt);
+  el: '#app',
+  data: () => ({
+    playerName: '',
+    list: [],
+  }),
+  computed: {
+    listSorted() {
+      return this.list.sort((a, b) => a.updatedAt - b.updatedAt);
+    },
   },
- },
- methods: {
-   onRemove(item) {
-     const isEqual = (a, b) => [
-       'name',
-       'updatedAt',
-     ].every(key => a[key] === b[key])
+  methods: {
+    onRemove(item) {
+      const isEqual = (a, b) => [
+        'name',
+        'updatedAt',
+      ].every(key => a[key] === b[key])
 
-     const indexToRemove = this.list.findIndex(i => isEqual(i, item))
-     this.list.splice(indexToRemove, 1)
-   },
-   onAction(item) {
-     item.updatedAt = new Date();
-   },
-   addPlayer() {
-    this.list.push({ name: this.playerName, updatedAt: new Date() })
-    this.playerName = ''
-   },
- },
-})
+      const indexToRemove = this.list.findIndex(i => isEqual(i, item))
+      this.list.splice(indexToRemove, 1)
+    },
+    onAction(item) {
+      item.updatedAt = new Date();
+    },
+    addPlayer() {
+      this.list.push({ name: this.playerName, updatedAt: new Date() })
+      this.playerName = ''
+    },
+  },
+});
 </script>
